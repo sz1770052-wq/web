@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аптека "Пульс" - здоровье и уход</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="icon" type="image/png" href="images/logo_puls.png">
+</head>
+<body>
+
+    <!-- Модальное окно регистрации -->
+    <div id="registerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> Регистрация</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-user"></i> Имя</label>
+                    <input type="text" id="name" name="name" placeholder="Введите ваше имя">
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" name="email" placeholder="example@email.com">
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Телефон</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+7 (999) 999-99-99">
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="Минимум 6 символов">
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword"><i class="fas fa-lock"></i> Подтвердите пароль</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Повторите пароль">
+                    <div class="error-message"></div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-check"></i> Зарегистрироваться
+                </button>
+                <p style="text-align: center; margin-top: 15px; color: #727d71; font-size: 0.9rem;">
+                    Уже есть аккаунт? <a href="#" id="showLogin">Войти</a><br>
+                    <a href="#" id="showAdminLogin" style="color: #6d4c3d; font-weight: 600; margin-top: 5px; display: inline-block;">
+                        Войти как администратор
+                    </a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно входа -->
+    <div id="loginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-sign-in-alt"></i> Вход</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="loginEmail" name="email" placeholder="example@email.com">
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> Пароль</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="Введите пароль">
+                    <div class="error-message"></div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Войти
+                </button>
+                <p style="text-align: center; margin-top: 15px; color: #727d71; font-size: 0.9rem;">
+                    Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a><br>
+                    <a href="#" id="showAdminLoginFromLogin" style="color: #6d4c3d; font-weight: 600; margin-top: 5px; display: inline-block;">
+                        Войти как администратор
+                    </a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно администратора -->
+    <div id="adminModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-user-shield"></i> Панель администратора</h2>
+            <div class="admin-tabs" style="margin-bottom: 20px;">
+                <button class="admin-tab active" data-tab="products">Управление товарами</button>
+                <button class="admin-tab" data-tab="users">Пользователи</button>
+                <button class="admin-tab" data-tab="stats">Статистика</button>
+            </div>
+
+            <div id="adminProductsTab" class="admin-tab-content active">
+                <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #6d4c3d;">Список товаров</h3>
+                    <button id="addProductBtn" class="submit-btn" style="padding: 8px 15px; background: #4CAF50;">
+                        <i class="fas fa-plus"></i> Добавить товар
+                    </button>
+                </div>
+                <div id="adminProductsList" style="max-height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 10px;">
+                    <!-- Список товаров загружается здесь -->
+                </div>
+            </div>
+
+            <div id="adminUsersTab" class="admin-tab-content">
+                <h3 style="color: #6d4c3d; margin-bottom: 15px;">Пользователи сайта</h3>
+                <div id="adminUsersList" style="max-height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 10px;">
+                    <!-- Список пользователей загружается здесь -->
+                </div>
+            </div>
+
+            <div id="adminStatsTab" class="admin-tab-content">
+                <h3 style="color: #6d4c3d; margin-bottom: 15px;">Статистика сайта</h3>
+                <div id="adminStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #6d4c3d;" id="totalProducts">0</div>
+                        <div style="color: #727d71; font-size: 14px;">Всего товаров</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #6d4c3d;" id="totalUsers">0</div>
+                        <div style="color: #727d71; font-size: 14px;">Пользователей</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #6d4c3d;" id="totalOrders">0</div>
+                        <div style="color: #727d71; font-size: 14px;">Всего заказов</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #6d4c3d;" id="totalRevenue">0 ₽</div>
+                        <div style="color: #727d71; font-size: 14px;">Общая выручка</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4 style="color: #6d4c3d; margin-bottom: 10px;">Последние действия</h4>
+                    <div id="recentActivity" style="max-height: 200px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 10px;">
+                        <!-- История действий -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно добавления/редактирования товара -->
+    <div id="productEditModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-edit"></i> <span id="productModalTitle">Добавить товар</span></h2>
+            <form id="productEditForm">
+                <input type="hidden" id="editProductId">
+
+                <div class="form-group">
+                    <label for="editTitle"><i class="fas fa-heading"></i> Название товара</label>
+                    <input type="text" id="editTitle" name="title" placeholder="Введите название товара" required>
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editDescription"><i class="fas fa-align-left"></i> Описание</label>
+                    <textarea id="editDescription" name="description" placeholder="Введите описание товара" rows="3" style="width: 100%; padding: 12px 16px; border: 2px solid #dcc9b6; border-radius: 8px; font-size: 1rem; resize: vertical;"></textarea>
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPrice"><i class="fas fa-tag"></i> Цена (руб.)</label>
+                    <input type="number" id="editPrice" name="price" placeholder="1000" min="0" step="1" required>
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editOldPrice"><i class="fas fa-tags"></i> Старая цена (руб., необязательно)</label>
+                    <input type="number" id="editOldPrice" name="oldPrice" placeholder="1200" min="0" step="1">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCategory"><i class="fas fa-folder"></i> Категория</label>
+                    <select id="editCategory" name="category" style="width: 100%; padding: 12px 16px; border: 2px solid #dcc9b6; border-radius: 8px; font-size: 1rem;">
+                        <option value="medicine">Лекарства</option>
+                        <option value="vitamins">Витамины и БАД</option>
+                        <option value="hygiene">Гигиена и уход</option>
+                        <option value="medtech">Мед. техника</option>
+                        <option value="baby">Мама и малыш</option>
+                        <option value="vision">Зрение</option>
+                        <option value="medical">Мед. изделия</option>
+                        <option value="cosmetics">Косметика</option>
+                        <option value="allergy">Аллергия</option>
+                        <option value="orthopedics">Ортопедия</option>
+                        <option value="sports">Диета и спорт</option>
+                    </select>
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editImage"><i class="fas fa-image"></i> URL изображения</label>
+                    <input type="text" id="editImage" name="image" placeholder="images/product.jpg">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editRating"><i class="fas fa-star"></i> Рейтинг (0-5)</label>
+                    <input type="number" id="editRating" name="rating" placeholder="4.5" min="0" max="5" step="0.1">
+                    <div class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editBadge"><i class="fas fa-certificate"></i> Бейдж (необязательно)</label>
+                    <input type="text" id="editBadge" name="badge" placeholder="-10%, Новинка, Хит">
+                    <div class="error-message"></div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="submit-btn" style="flex: 1; background: #4CAF50;">
+                        <i class="fas fa-save"></i> Сохранить
+                    </button>
+                    <button type="button" id="cancelEdit" class="submit-btn" style="flex: 1; background: #727d71;">
+                        <i class="fas fa-times"></i> Отмена
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно информации о компании -->
+    <div id="companyInfoModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <div id="modalContent" style="line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно информации -->
+    <div id="infoModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close">&times;</span>
+            <h2 id="infoModalTitle"></h2>
+            <div id="infoModalContent" style="line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <!-- Шапка сайта -->
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <img src="images/logo_puls.png" alt="Пульс - аптека" class="logo-image">
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Поиск лекарств и товаров...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <div class="action-buttons">
+                        <a href="#" class="action-btn" id="favoritesBtn">
+                            <i class="far fa-heart"></i>
+                            <span class="btn-label">Избранное</span>
+                            <span class="favorites-count">0</span>
+                        </a>
+                        <a href="#" class="action-btn" id="cartBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="btn-label">Корзина</span>
+                            <span class="cart-count">0</span>
+                        </a>
+                        <a href="#" class="action-btn" id="profileBtn">
+                            <i class="far fa-user"></i>
+                            <span class="btn-label" id="profileLabel">Профиль</span>
+                            <span class="user-badge" id="userBadge" style="display: none;"></span>
+                        </a>
+                        <a href="#" class="action-btn" id="adminBtn" style="display: none;">
+                            <i class="fas fa-user-shield"></i>
+                            <span class="btn-label">Админ</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент с боковым меню -->
+    <div class="main-layout">
+        <!-- Боковое меню каталога -->
+        <aside class="catalog-sidebar">
+            <h3 class="catalog-title">
+                <i class="fas fa-bars"></i>
+                Каталог товаров
+            </h3>
+            <ul class="catalog-menu">
+                <li>
+                    <a href="#" data-category="medicine">
+                        <i class="fas fa-pills"></i>
+                        <span>Лекарства</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="vitamins">
+                        <i class="fas fa-capsules"></i>
+                        <span>Витамины и БАД</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="hygiene">
+                        <i class="fas fa-soap"></i>
+                        <span>Гигиена и уход</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="baby">
+                        <i class="fas fa-baby"></i>
+                        <span>Мама и малыш</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="vision">
+                        <i class="fas fa-eye"></i>
+                        <span>Зрение</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="medtech">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Мед. техника</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="medical">
+                        <i class="fas fa-stethoscope"></i>
+                        <span>Мед. изделия</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="cosmetics">
+                        <i class="fas fa-palette"></i>
+                        <span>Косметика</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="allergy">
+                        <i class="fas fa-allergies"></i>
+                        <span>Аллергия</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="orthopedics">
+                        <i class="fas fa-bone"></i>
+                        <span>Ортопедия</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-category="sports">
+                        <i class="fas fa-running"></i>
+                        <span>Диета и спорт</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Основная область контента -->
+        <main class="main-content">
+            <!-- Vue.js приложение для кнопок -->
+            <div id="vue-app">
+                <!-- Рекламный слайдер -->
+                <section class="slider">
+                    <div class="slides">
+                        <!-- Слайд 1 -->
+                        <div class="slide slide1">
+                            <div class="slide-content">
+                                <h2>Популярные товары месяца</h2>
+                                <p>Скидки до 20% на сезонные лекарства и витамины</p>
+                                
+                                <!-- Vue.js кнопка -->
+                                <button @click="handleSlide1" class="btn">
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Слайд 2 -->
+                        <div class="slide slide2">
+                            <div class="slide-content">
+                                <h2>Новые поступления</h2>
+                                <p>Современные медицинские приборы для дома по лучшим ценам</p>
+                                
+                                <!-- Vue.js кнопка -->
+                                <button @click="handleSlide2" class="btn">
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Слайд 3 -->
+                        <div class="slide slide3">
+                            <div class="slide-content">
+                                <h2>Консультация специалиста</h2>
+                                <p>Бесплатная консультация фармацевта онлайн 24/7</p>
+                                
+                                <!-- Vue.js кнопка -->
+                                <button @click="handleSlide3" class="btn">
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Промо-блоки -->
+                <section class="promo-section">
+                    <div class="promo-grid">
+                        <div class="promo-card promo-card-1">
+                            <div class="promo-content">
+                                <h3>Акции недели</h3>
+                                <p>Специальные предложения на популярные товары со скидками до 40%</p>
+                                
+                                <!-- Vue.js кнопка -->
+                                <button @click="handlePromo1" class="promo-btn">
+                                    Смотреть все акции
+                                </button>
+                            </div>
+                        </div>
+                        <div class="promo-card promo-card-2">
+                            <div class="promo-content">
+                                <h3>Бесплатная доставка</h3>
+                                <p>При заказе от 1500 рублей. Доставляем в день заказа!</p>
+                                
+                                <!-- Vue.js кнопка -->
+                                <button @click="handlePromo2" class="promo-btn">
+                                    Подробнее о доставке
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Популярные товары -->
+            <section class="products-section">
+                <div class="section-header">
+                    <h2>Популярные товары</h2>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <!-- Кнопка обновления появится автоматически -->
+                    </div>
+                </div>
+                <div class="products-grid" id="products-grid">
+                </div>
+            </section>
+
+            <!-- Популярные категории -->
+            <section class="categories">
+                <h2>Популярные категории</h2>
+                <div class="categories-grid">
+                    <div class="category-card" data-category="medicine">
+                        <div class="category-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <h3>Лекарства</h3>
+                        <p>Широкий ассортимент лекарственных препаратов по доступным ценам</p>
+                    </div>
+                    <div class="category-card" data-category="vitamins">
+                        <div class="category-icon">
+                            <i class="fas fa-capsules"></i>
+                        </div>
+                        <h3>Витамины и БАД</h3>
+                        <p>Для поддержания здоровья и иммунитета всей семьи</p>
+                    </div>
+                    <div class="category-card" data-category="medtech">
+                        <div class="category-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3>Мед. техника</h3>
+                        <p>Тонометры, глюкометры, ингаляторы и другое оборудование</p>
+                    </div>
+                    <div class="category-card" data-category="baby">
+                        <div class="category-icon">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                        <h3>Мама и малыш</h3>
+                        <p>Товары для беременных, новорожденных и детей всех возрастов</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Логотип -->
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="images/logo_puls_big.png" alt="Пульс - аптека" class="logo-image-big">
+                    </div>
+                </div>
+
+                <!-- Компания -->
+                <div class="footer-section">
+                    <h4>Компания</h4>
+                    <ul>
+                        <li><a href="#" class="footer-link" data-type="company">О компании</a></li>
+                        <li><a href="#" class="footer-link" data-type="suppliers">Поставщики</a></li>
+                        <li><a href="#" class="footer-link" data-type="career">Карьера</a></li>
+                        <li><a href="#" class="footer-link" data-type="media">СМИ о нас</a></li>
+                        <li><a href="#" class="footer-link" data-type="licenses">Лицензии</a></li>
+                    </ul>
+                </div>
+
+                <!-- Помощь -->
+                <div class="footer-section">
+                    <h4>Помощь</h4>
+                    <ul>
+                        <li><a href="#" class="footer-link" data-type="faq">Часто задаваемые вопросы</a></li>
+                        <li><a href="#" class="footer-link" data-type="order">Как сделать заказ</a></li>
+                        <li><a href="#" class="footer-link" data-type="delivery">Оплата и доставка</a></li>
+                        <li><a href="#" class="footer-link" data-type="return">Возврат товара</a></li>
+                        <li><a href="#" class="footer-link" data-type="privacy">Конфиденциальность</a></li>
+                    </ul>
+                </div>
+
+                <!-- Контакты -->
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p><strong>info@puls.ru</strong></p>
+                    <p>Пишите по любым вопросам, отзывам и предложениям</p>
+                    <p class="phone-number">8 800 700 87 87</p>
+                    <p>Круглосуточная бесплатная линия</p>
+                    <div style="margin-top: 20px; display: flex; gap: 15px;">
+                        <span style="color: white; font-size: 1.5rem;"><i class="fab fa-vk"></i></span>
+                        <span style="color: white; font-size: 1.5rem;"><i class="fab fa-telegram"></i></span>
+                        <span style="color: white; font-size: 1.5rem;"><i class="fab fa-whatsapp"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Аптека «Пульс». Все права защищены. Имеются противопоказания, необходима консультация специалиста.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            methods: {
+                handleSlide1() {
+                    // Вызываем существующую функцию из script.js
+                    if (typeof filterMultipleCategories === 'function') {
+                        filterMultipleCategories(['medicine', 'vitamins']);
+                    }
+                },
+
+                handleSlide2() {
+                    // Вызываем существующую функцию из script.js
+                    if (typeof filterByCategory === 'function') {
+                        filterByCategory('medtech');
+                    }
+                },
+
+                handleSlide3() {
+                    // Вызываем существующую функцию из script.js
+                    if (typeof showInfoModal === 'function') {
+                        showInfoModal('Консультация специалиста',
+                            '<p><strong>Бесплатная консультация фармацевта 24/7</strong></p>' +
+                            '<p>Наши специалисты помогут вам:</p>' +
+                            '<ul style="margin-top: 10px;">' +
+                            '<li>Подобрать аналоги лекарств</li>' +
+                            '<li>Рассказать о способах применения</li>' +
+                            '<li>Предупредить о возможных противопоказаниях</li>' +
+                            '<li>Посоветовать средства для профилактики</li>' +
+                            '</ul>' +
+                            '<p style="margin-top: 15px;"><strong>Как получить консультацию:</strong></p>' +
+                            '<p>1. Позвоните по телефону 8 800 700 87 87</p>' +
+                            '<p>2. Напишите в онлайн-чат на сайте</p>' +
+                            '<p>3. Отправьте вопрос на info@puls.ru</p>' +
+                            '<p style="margin-top: 15px;">Консультации проводят дипломированные фармацевты с медицинским образованием.</p>'
+                        );
+                    }
+                },
+
+                handlePromo1() {
+                    // Вызываем существующую функцию из script.js
+                    if (typeof filterDiscountedProducts === 'function') {
+                        filterDiscountedProducts();
+                    }
+                },
+
+                handlePromo2() {
+                    // Вызываем существующую функцию из script.js
+                    if (typeof showInfoModal === 'function') {
+                        showInfoModal('Информация о доставке',
+                            '<p><strong>Условия бесплатной доставки:</strong></p>' +
+                            '<ul style="margin-top: 10px;">' +
+                            '<li>Бесплатная доставка при заказе от 1500 рублей</li>' +
+                            '<li>Доставка курьером по городу - 1-2 рабочих дня</li>' +
+                            '<li>Самовывоз из аптек - в день заказа</li>' +
+                            '<li>Доставка почтой по России - 3-7 рабочих дней</li>' +
+                            '<li>Экспресс-доставка в течение 2 часов - 300 рублей</li>' +
+                            '</ul>' +
+                            '<p style="margin-top: 15px;">Мы работаем с 9:00 до 21:00 без выходных. Доставляем лекарства и медицинские товары в удобное для вас время.</p>'
+                        );
+                    }
+                }
+            }
+        }).mount('#vue-app');
+    </script>
+</body>
+</html>

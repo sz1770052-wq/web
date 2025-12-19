@@ -1,0 +1,138 @@
+﻿{
+  "products": [
+    {
+      "id": 1,
+      "title": "Тонометр автоматический",
+      "description": "Для точного измерения давления",
+      "image": "images/tonometr.jpg",
+      "price": 2499,
+      "oldPrice": 2999,
+      "rating": 4.5,
+      "badge": "-15%",
+      "badgeClass": "",
+      "category": "medtech"
+    },
+    {
+      "id": 2,
+      "title": "Витаминный комплекс",
+      "description": "Для укрепления иммунитета",
+      "image": "images/vitamin.jpg",
+      "price": 890,
+      "rating": 5.0,
+      "badge": "Новинка",
+      "badgeClass": "new",
+      "category": "vitamins"
+    },
+    {
+      "id": 3,
+      "title": "Ингалятор компрессорный",
+      "description": "Для лечения заболеваний дыхательных путей",
+      "image": "images/ingalyator.jpg",
+      "price": 3290,
+      "rating": 4.0,
+      "badge": "Хит",
+      "badgeClass": "",
+      "category": "medtech"
+    },
+    {
+      "id": 4,
+      "title": "Глюкометр точный электронный",
+      "description": "Для контроля уровня глюкозы",
+      "image": "images/glukometr.jpg",
+      "price": 1799,
+      "oldPrice": 1999,
+      "rating": 4.5,
+      "badge": "-10%",
+      "badgeClass": "",
+      "category": "medtech"
+    },
+    {
+      "id": 5,
+      "title": "Термометр электронный",
+      "description": "Быстрое измерение температуры",
+      "image": "images/termometr.jpg",
+      "price": 450,
+      "rating": 4.0,
+      "badge": "",
+      "badgeClass": "",
+      "category": "medtech"
+    },
+    {
+      "id": 6,
+      "title": "Защитные маски",
+      "description": "Упаковка 50 шт, медицинские",
+      "image": "images/mask.jpg",
+      "price": 299,
+      "rating": 4.5,
+      "badge": "Новинка",
+      "badgeClass": "new",
+      "category": "hygiene"
+    },
+    {
+      "id": 7,
+      "title": "Аскорбинка",
+      "description": "Упаковка 10 шт, без сахара, со вкусом апельсина",
+      "image": "images/askorbinka.jpg",
+      "price": 59,
+      "rating": 5.0,
+      "badge": "",
+      "badgeClass": "",
+      "category": "vitamins"
+    },
+    {
+      "id": 8,
+      "title": "Зубная паста",
+      "description": "Для качественной и эффективной чистки зубов",
+      "image": "images/pasta.jpg",
+      "price": 300,
+      "rating": 4.0,
+      "badge": "Хит",
+      "badgeClass": "",
+      "category": "hygiene"
+    },
+    {
+      "id": 9,
+      "title": "Таблетки для рассасывания",
+      "description": "При болях в горле",
+      "image": "images/strepsils.jpg",
+      "price": 399,
+      "rating": 5.0,
+      "badge": "",
+      "badgeClass": "",
+      "category": "medicine"
+    },
+    {
+      "id": 10,
+      "title": "Пластырь нарезной",
+      "description": "При порезах, мозолях и других повреждениях",
+      "image": "images/plastyr.jpg",
+      "price": 189,
+      "rating": 5.0,
+      "badge": "",
+      "badgeClass": "",
+      "category": "medical"
+    },
+    {
+      "id": 11,
+      "title": "Детский сироп от кашля",
+      "description": "Со вкусом малины, с 3 лет",
+      "image": "images/ambrobene.jpg",
+      "price": 250,
+      "rating": 4.5,
+      "badge": "Новинка",
+      "badgeClass": "new",
+      "category": "medicine"
+    },
+    {
+      "id": 12,
+      "title": "Крем для лица увлажняющий",
+      "description": "Для сухой и чувствительной кожи",
+      "image": "images/nivea.jpg",
+      "price": 450,
+      "rating": 4.0,
+      "badge": "",
+      "badgeClass": "",
+      "category": "cosmetics"
+    }
+  ]
+}

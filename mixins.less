@@ -1,0 +1,48 @@
+// mixins.less
+
+// Миксины
+.transition(@property: all, @duration: 0.3s, @timing: ease) {
+    transition: @property @duration @timing;
+}
+
+.flex-center() {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-left() {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.flex-between() {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gradient(@color1, @color2) {
+    background: linear-gradient(135deg, @color1 0%, @color2 100%);
+}
+
+.box-shadow(@x: 0, @y: 5px, @blur: 15px, @color: rgba(0,0,0,0.1)) {
+    box-shadow: @x @y @blur @color;
+}
+
+.border-radius(@radius: 10px) {
+    border-radius: @radius;
+}
+
+.text-shadow(@x: 1px, @y: 1px, @blur: 2px, @color: rgba(0,0,0,0.3)) {
+    text-shadow: @x @y @blur @color;
+}
+
+.transform(@transform) {
+    transform: @transform;
+}
+
+.animation(@name, @duration: 1s, @timing: ease, @delay: 0s, @iteration: 1, @direction: normal, @fill: none) {
+    animation: @name @duration @timing @delay @iteration @direction @fill;
+}

@@ -1,0 +1,30 @@
+{
+  "name": "pharmacy-website",
+  "version": "1.0.0",
+  "description": "Сайт аптеки 'Пульс' с использованием Less, Grunt и Vue.js",
+  "main": "index.html",
+  "scripts": {
+    "start": "grunt",
+    "build": "grunt less",
+    "serve": "grunt connect watch"
+  },
+  "devDependencies": {
+    "grunt": "^1.5.3",
+    "grunt-contrib-less": "^3.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-contrib-connect": "^3.0.0"
+  },
+  "dependencies": {
+    "vue": "^3.4.0"
+  },
+  "keywords": [
+    "pharmacy",
+    "e-commerce",
+    "medical",
+    "shop",
+    "online",
+    "vue"
+  ],
+  "author": "Sonya Zaharova",
+  "license": "MIT"
+}
